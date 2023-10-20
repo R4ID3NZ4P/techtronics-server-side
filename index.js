@@ -44,8 +44,15 @@ async function run() {
         console.log(query);
         const result = await userCollection.findOne(query);
         console.log(result);
-        res.send(result);
-    })
+        if(result === null) res.send({}); 
+        else res.send(result);
+    });
+
+    app.get("/cartitem/:_id", async (req, res) => {
+      const query = {_id: new ObjectId(req.params._id)};
+      const result = await productCollection.findOne(query);;
+      res.send(result);
+    });
 
     app.put("/brands/:brand/:_id/update", async (req, res) => {
       const filter = {_id: new ObjectId(req.params._id)};
@@ -82,7 +89,7 @@ async function run() {
       const options = {upsert: true};
       const updatedCart = {$set: {user, items}};
       const result = await userCollection.updateOne(filter, updatedCart, options);
-      console.log(result);
+      // console.log(result);
       res.send(result);
     })
     
